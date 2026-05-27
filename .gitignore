@@ -1,0 +1,24 @@
+.DS_Store
+*.local.*
+**/*.local/**
+
+node_modules
+
+/.cache
+/build
+.env
+.dev.vars
+
+.wrangler
+
+# sst
+.sst
+*.db
+tsconfig.tsbuildinfo
+.tsbuildinfo
+
+
+.trigger
+*.db-shm
+*.db-wal
+.jj-*
