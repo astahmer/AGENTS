@@ -23,7 +23,6 @@ exceptions.
 | `security-review` | Reviewing authorization, validation, injection, and secret exposure |
 | `show-me` | Explaining a topic with focused diagrams or artifacts |
 | `structured-observability` | Designing bounded, typed, correlated observability |
-| `taste-from-sessions` | Maintaining durable personal coding preferences |
 | `write-a-skill` | Creating or updating a reusable agent skill |
 | `runtime-boundary-audit` | Reviewing ownership between UI, actors, services, adapters, and packages |
 | `actor-state-ownership` | Designing actor-based frontend state and async work |
