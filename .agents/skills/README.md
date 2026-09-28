@@ -19,9 +19,7 @@ exceptions.
 | `grill-me` | Stress-testing a plan or design through batched questions |
 | `jj` | Performing safe Jujutsu history operations |
 | `library-documentation-first` | Verifying unfamiliar library APIs before implementation |
-| `papercuts` | Recording short-lived, concrete workflow friction |
 | `product-description` | Describing product behavior from code and runtime evidence |
-| `rtk` | Using the token-optimized shell wrapper |
 | `security-review` | Reviewing authorization, validation, injection, and secret exposure |
 | `show-me` | Explaining a topic with focused diagrams or artifacts |
 | `structured-observability` | Designing bounded, typed, correlated observability |
