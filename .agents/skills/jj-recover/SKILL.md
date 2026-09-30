@@ -1,12 +1,21 @@
 ---
-name: jj
+name: jj-recover
 description: >
-  Hard-won rules for safe jj history surgery in multi-workspace repos. Use before
-  any abandon/rebase/op-restore/conflict-cleanup, or when divergent change-ids,
-  hidden conflicted commits, or stale workspace working copies appear.
+  Diagnose and recover from Jujutsu errors or inconsistent history and workspace
+  state. Use when a jj command fails, conflicts or stale workspaces appear,
+  change IDs diverge, or a prior history operation needs recovery.
 ---
 
-# JJ history surgery
+# Recover from jj history and workspace problems
+
+## Recovery workflow
+
+1. Stop repeating the failing mutation; capture the exact error.
+2. Inspect `jj status`, `jj workspace list`, `jj op log -n 1`, and relevant commits.
+3. Identify workspace owners and active work. Preserve other workspaces; do not
+   abandon or rewrite their work without an explicit request.
+4. Diagnose read-only first. Make the smallest repair, then verify conflicts,
+   trees, bookmarks, and working copies.
 
 ## Never do this
 
@@ -19,14 +28,13 @@ description: >
   patterns; `$` in paths (e.g. `o.$orgSlug`) is a syntax error, and a failed
   lookup still truncates the redirect target to an empty file.
 
-## Before restructuring history
+## Before rewriting history
 
-1. Bookmark the op: note `jj op log -n 1` id. Rollback = `jj op restore <id>`
-   (restores to the state *after* that op — not before it).
-2. Complete/forget sibling workspaces; one writer per workspace. Commands in ws A
-   rewrite ws B's working copy ("Concurrent modification detected").
-3. Snapshot tree invariants: hash `jj diff --from <headA> --to <headB>` output;
-   re-check after every batch.
+1. Note the current `jj op log -n 1` id. `jj op restore <id>` restores the
+   repository to the state **after** that operation, not before it.
+2. Avoid concurrent writes to a workspace; one workspace can rewrite another's
+   working copy and cause "Concurrent modification detected".
+3. Snapshot important tree invariants and re-check after each rewrite.
 
 ## Conflict checks that actually work
 
@@ -39,7 +47,7 @@ jj log -r '<range> & heads(all())' --no-graph -T 'if(conflict,"C ","") ++ descri
 
 Hidden commits break revset algebra — enumerate by explicit id or range endpoints.
 
-## Fixing conflicted commits (reliable recipe)
+## Fixing conflicted commits
 
 Oldest first — one deep fix often cascade-heals descendants:
 
@@ -67,24 +75,13 @@ conflict with `jj restore --from <golden> <paths>` + squash into the owning comm
 The empty-diff gate is mandatory — rebasing across reformatted regions can silently
 drop whole blocks with zero conflict markers (only tree-equality detects it).
 
-## Pruning strays safely
-
-For each candidate commit-id: assert non-ancestry first, then abandon.
-
-```bash
-jj log -r "$cid & ::<head>" --no-graph    # empty = safe to abandon
-jj abandon $cid
-```
-
-Expect abandoned-head cascades: each prune can expose parents. Iterate to fixpoint.
-
 ## Gotchas
 
 - `jj op restore <op>` restores **to** that state, including its effects.
 - Stale working copies after cross-workspace rewrites: re-materialize with
   `jj new <tip>` inside the affected workspace.
-- `$`-paths: use git plumbing in colocated repos (`git show <rev>:<path>`), or
-  escape filesets — don't pass bare paths to `jj file show`.
+- `$`-paths: `jj` treats path arguments as fileset expressions. Escape the path
+  for jj's fileset syntax; don't pass a bare path to `jj file show`.
 - Empty `wip` heads multiply from workspace churn; sweep with a fixpoint loop
   excluding only the live branch ancestry.
 - Commit-ids go stale after every cascading rebase — fetch the target id
@@ -93,6 +90,8 @@ Expect abandoned-head cascades: each prune can expose parents. Iterate to fixpoi
   disambiguate with `change_id(x) & ::tip` first.
 - Abandoning only a junk head exposes its parent as a new head — abandon the
   whole orphan chain (`::<junk-head> & ~::<fork-point>`, by explicit commit ids).
+- Before pruning, prove a candidate is outside the kept ancestry; abandoning a
+  head can expose its parent as another stray.
 - `jj abandon` silently deletes bookmarks dangling on junk ("Deleted bookmarks:"
   line). Recover what they pointed at via `jj op show <abandon-op>`, re-point at
   the kept counterpart of the same change-id.

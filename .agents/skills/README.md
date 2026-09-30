@@ -17,7 +17,8 @@ exceptions.
 | `database-investigation` | Inspecting database schema, data, indexes, and plans read-only |
 | `feature-plan` | Creating a structured feature plan from a reusable template |
 | `grill-me` | Stress-testing a plan or design through batched questions |
-| `jj` | Performing safe Jujutsu history operations |
+| `jj-recover` | Diagnosing and recovering from Jujutsu errors and inconsistent history |
+| `jj-merge-workspaces` | Unifying completed work across Jujutsu workspaces |
 | `library-documentation-first` | Verifying unfamiliar library APIs before implementation |
 | `product-description` | Describing product behavior from code and runtime evidence |
 | `security-review` | Reviewing authorization, validation, injection, and secret exposure |
