@@ -41,6 +41,15 @@ description: >
   workspace's `@` sits on.** That workspace's next snapshot turns it into a
   divergent copy of the same change (same change-id, second commit-id); name only
   revisions you created.
+- **Never `jj op revert` an operation you already reverted.** Reverting a revert
+  re-applies the original effect, so a chain of reverts lands somewhere you did not
+  predict. `jj op revert` takes **one** operation, so a loop must run newest-first;
+  once the window is yours, prefer a single `jj op restore <good-op>` (it discards
+  other agents' operations too — say so in the report).
+- **Never move an interior revision to the tip with `jj rebase -r <rev> -d <tip>`.**
+  Its descendants are re-applied onto its old parent, which re-introduces conflicts
+  you already resolved. A workspace `@` that sits mid-line moves with
+  `jj new <tip>` **inside that workspace**.
 
 ## Before rewriting history
 
@@ -49,6 +58,12 @@ description: >
 2. Avoid concurrent writes to a workspace; one workspace can rewrite another's
    working copy and cause "Concurrent modification detected".
 3. Snapshot important tree invariants and re-check after each rewrite.
+4. Snapshot every workspace first — run `jj status` inside each one. Edits that
+   were never snapshotted are not in the store, and a rewrite of that workspace's
+   `@` is what races them.
+5. Read a past state without touching the present with `jj --at-op <op-id> log …`.
+   It is the cheapest way to prove a prune changed no tree: capture the tip before
+   the op, then `git diff <old-tip> <new-tip>` = 0 files.
 
 ## Conflict checks that actually work
 
@@ -128,3 +143,18 @@ drop whole blocks with zero conflict markers (only tree-equality detects it).
 - `jj file show` reporting "exists but is not a file" means the path is a symlink
   or gitlink in the tree. Read the mode with `git ls-tree <rev> <dir>`
   (120000 symlink, 160000 submodule).
+- Rewriting the tip orphans every live `@` that was its child (new commit-id, or a
+  divergent copy of the same change). Fold them back with
+  `jj rebase -r <stray-head> -d <tip>` and abandon the duplicate copy. Expect to
+  repeat while other agents keep committing.
+- `jj log -T 'commit_id'` over a multi-revision set concatenates ids with no
+  separator; always template `commit_id ++ "\n"`.
+- `jj bookmark set` refuses a backwards or sideways move while the bookmark is
+  conflicted; choose the target first, then pass `--allow-backwards`.
+- In a colocated repo, a `jj workspace add` checkout has no `.git`: git commands
+  there need `GIT_DIR=<root>/.git GIT_WORK_TREE=<ws>`, and `git apply --3way`
+  fails against the shared index.
+- Two copies of one change that differ only by `.jjconflict-*` side files are a
+  materialised conflict, not two implementations. `jj rebase` drops the inherited
+  side files because they cancel in the change diff; a git patch of the same
+  commit re-adds them.
