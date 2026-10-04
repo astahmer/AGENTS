@@ -65,6 +65,49 @@ set a different scope.
 - Treat saved cookies and browser storage as login credentials. Keep them out
   of repositories, configuration, and memory.
 
+## DSH restart semantics
+
+When a DSH change needs a restart, say which kind — restarting the host process
+and refreshing the browser page are different, and only the first ends every
+session in the profile.
+
+| Change | What it needs |
+|---|---|
+| Editing `~/.dsh/profiles/<name>/cordis.patch.yml` or `cordis.yml` | **Restart the DSH host process** |
+| Adding or removing a profile dependency in `package.json` | **Restart the DSH host process** |
+| Patching an agent preset row by id in the profile patch | **Restart the DSH host process** |
+| Enabling or disabling a plugin from the Settings GUI | No restart — takes effect live |
+| Rebuilding a client plugin bundle | Refresh the browser page |
+
+The profile patch is read once at boot by `@cordisjs/plugin-include` and is not
+watched, so a saved patch does nothing until the process restarts. Restarting the
+host kills every open session, so ask the user to do it instead of killing the
+process yourself. To verify a patch without touching the live host, boot a second
+instance on a scratch port and delete it afterwards:
+
+```bash
+dsh --profile web --port 31999 --no-open
+```
+
+## Async questions
+
+`ask_user_question` runs in timed mode, and its `timeout` argument is the entire
+mode selector:
+
+- `timeout: -1` — block until the user answers. Use only when the work cannot
+  continue without the answer.
+- any positive number of seconds — the call returns `{ pending: true, callId }`
+  and the agent keeps working. The question stays answerable, and a later answer
+  arrives as a `user-question-reply` user message.
+
+Prefer async. A blocking question stalls the turn and everything queued behind
+it, while a pending question costs no tokens and still gets answered. Reach for
+`-1` only when the answer is genuinely required to proceed, such as a
+destructive confirmation or a value the agent cannot discover on its own.
+
+Batch related questions into one call: the pending path releases the agent once
+per call, not once per question.
+
 ## Nix-backed debugging
 
 This workstation has Nix and `comma` available, so a command missing from
