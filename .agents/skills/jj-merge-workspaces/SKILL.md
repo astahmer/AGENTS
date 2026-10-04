@@ -4,7 +4,9 @@ description: >
   Consolidate completed work across Jujutsu workspaces into a linear history
   and leave the default workspace at its tip. Use when the user asks to unify
   workspace work, bring completed changes into the default workspace, or create
-  one linear history from parallel workspace branches.
+  one linear history from parallel workspace branches. Also load for
+  history-shape requests — "unify the history", "spine branch", "linear
+  history", "one branch", "too many heads".
 ---
 
 # Merge jj workspace work

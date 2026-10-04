@@ -3,7 +3,9 @@ name: jj-recover
 description: >
   Diagnose and recover from Jujutsu errors or inconsistent history and workspace
   state. Use when a jj command fails, conflicts or stale workspaces appear,
-  change IDs diverge, or a prior history operation needs recovery.
+  change IDs diverge, or a prior history operation needs recovery. Also load when
+  a history-shape request — "unify the history", "spine branch", "linear
+  history", "one branch", "too many heads" — already failed or forked the line.
 ---
 
 # Recover from jj history and workspace problems
@@ -35,6 +37,10 @@ description: >
 - **Never run `jj squash` or `jj describe` without `-m` or
   `--use-destination-message` from an agent shell.** Both open an editor and hang
   until the job is killed.
+- **Never `jj describe`, `jj squash` or `jj abandon` a revision another
+  workspace's `@` sits on.** That workspace's next snapshot turns it into a
+  divergent copy of the same change (same change-id, second commit-id); name only
+  revisions you created.
 
 ## Before rewriting history
 
