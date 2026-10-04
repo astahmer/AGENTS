@@ -27,6 +27,14 @@ description: >
 - **Never `jj restore --from <rev> <path>` blindly** — path args are fileset
   patterns; `$` in paths (e.g. `o.$orgSlug`) is a syntax error, and a failed
   lookup still truncates the redirect target to an empty file.
+- **Never reuse a commit-id captured before a rewrite.** Hole-filling rewrites
+  descendants (`Rebased N descendant commits onto updated working copy`), so a
+  planned id is stale the moment an earlier step lands. Resolve by change-id at
+  use time, or duplicate the original by id —
+  `jj duplicate -r <original-id> -o <tip>` — which neither races nor stales.
+- **Never run `jj squash` or `jj describe` without `-m` or
+  `--use-destination-message` from an agent shell.** Both open an editor and hang
+  until the job is killed.
 
 ## Before rewriting history
 
@@ -46,6 +54,10 @@ jj log -r '<range> & heads(all())' --no-graph -T 'if(conflict,"C ","") ++ descri
 ```
 
 Hidden commits break revset algebra — enumerate by explicit id or range endpoints.
+
+One unresolved conflict marks the commit **and its whole subtree**, so a conflict
+count is not a location. Walk the line from the base and take the first
+conflicted commit; that is the root. Resolve it, re-scan, repeat.
 
 ## Fixing conflicted commits
 
@@ -95,3 +107,18 @@ drop whole blocks with zero conflict markers (only tree-equality detects it).
 - `jj abandon` silently deletes bookmarks dangling on junk ("Deleted bookmarks:"
   line). Recover what they pointed at via `jj op show <abandon-op>`, re-point at
   the kept counterpart of the same change-id.
+- `jj op revert <op-id>` undoes exactly one operation; `jj op restore <op-id>`
+  reverts everything after it. In a shared store, revert your own ops one by one
+  rather than restoring over other agents' work.
+- `jj resolve -r <rev> --tool :ours|:theirs` resolves a non-`@` revision and
+  rewrites it (bookmarks follow). Without `--tool`, `-r` only prints the
+  `jj new` + resolve + squash instructions.
+- Abandoning a workspace's `@` gives that workspace a fresh empty commit on the
+  nearest **visible** ancestor, which can sit below the branch you pruned. Sweep
+  `jj workspace list` afterwards and rebase the strays onto the tip.
+- Abandon a whole junk set in one operation:
+  `jj abandon '<base>:: & ~::<tip>'`. It prints `Deleted bookmarks:` for every
+  bookmark that pointed into the set; re-create the ones you still want.
+- `jj file show` reporting "exists but is not a file" means the path is a symlink
+  or gitlink in the tree. Read the mode with `git ls-tree <rev> <dir>`
+  (120000 symlink, 160000 submodule).

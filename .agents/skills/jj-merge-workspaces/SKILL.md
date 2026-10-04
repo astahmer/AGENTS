@@ -50,12 +50,41 @@ copies into one chain, move `main` to the end, then start a new change.
 
 4. Resolve conflicts:
    - `jj resolve --list` to find conflicted files
-   - `jj new <conflicted-commit>`, fix the files, then `jj squash`
+   - `jj new <conflicted-commit>`, fix the files, then
+     `jj squash --use-destination-message` (plain `jj squash` opens an editor)
    - Descendant conflicts often auto-resolve after the squash.
 
 5. Move main and continue:
    - `jj bookmark set <target-bookmark> -r <final-commit>`
    - In the default workspace: `jj new <target-bookmark>`
+
+## Consolidating an exploded history
+
+When dozens of heads must collapse into one line (a previous unification or a
+`jj duplicate` burst), separate live work from junk before rewriting anything:
+
+```bash
+BASE=<base-revision>
+WS=$(jj workspace list | awk -F'[ :]+' '{print "::"$4}' | paste -sd'|' -)
+jj log -r "$BASE:: & ($WS)"   # keep: ancestors of a live workspace @
+jj log -r "$BASE:: & ~($WS)"  # junk: stale copies, abandoned variants
+```
+
+- Rebuild with `jj duplicate -r <original-id> -o <tip>` per kept revision.
+  Duplicating a range and rebasing `-b` afterwards goes stale as soon as the
+  first member is rewritten, because hole-filling rewrites descendants.
+- `-r` keeps only the edges **inside** the set: `jj rebase -r 'a|b|c' -d <tip>`
+  chains a real parent-child run, while an unrelated set becomes siblings, not a
+  line.
+- Two heads implementing the same change with different content cannot both sit
+  on one line coherently: pick a side (`jj resolve -r <rev> --tool :ours|:theirs`)
+  or drop the duplicate. Union only when the sides added distinct content.
+- Abandon the junk in one operation, `jj abandon "$BASE:: & ~::<tip>"`, then
+  sweep `jj workspace list`: abandoned workspace `@`s are re-created on the
+  nearest visible ancestor, which can be below the base revision.
+- Verify with the repository's own gates (install, typecheck, build, test), and
+  intersect the failing paths with `jj diff --from <pre-merge> --to @ --summary`
+  to separate baseline drift from damage this rewrite caused.
 
 ## Example
 
