@@ -86,6 +86,24 @@ jj log -r "$BASE:: & ~($WS)"  # junk: stale copies, abandoned variants
   intersect the failing paths with `jj diff --from <pre-merge> --to @ --summary`
   to separate baseline drift from damage this rewrite caused.
 
+### Avoid
+
+- **Linearizing the junk set.** Two variants of one change merge into
+  non-overlapping hunks: the files look resolved and are still broken.
+- **Rebasing a list of commit ids captured earlier.** Hole-filling rewrites
+  descendants, so the next id is already stale.
+- **Unioning a conflict between two implementations of the same change.** Pick a
+  side or drop the duplicate.
+- **Reading a conflict count as a location.** One root conflict marks every
+  descendant.
+- **Writing files while the checkout's `@` is mid-line.** Any write amends that
+  revision and rebases the subtree under other agents.
+- **Bare `jj squash` / `jj describe`.** They open an editor and hang; pass `-m`
+  or `--use-destination-message`.
+- **`jj op restore` in a shared store.** It discards other agents' operations
+  too; use `jj op revert` on your own, newest first.
+- **Declaring success from shape alone.** Run the gates.
+
 ## Example
 
 ```bash
