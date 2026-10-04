@@ -158,3 +158,15 @@ drop whole blocks with zero conflict markers (only tree-equality detects it).
   materialised conflict, not two implementations. `jj rebase` drops the inherited
   side files because they cancel in the change diff; a git patch of the same
   commit re-adds them.
+- Two writers on one store — another agent, or a branching GUI server — make jj
+  record **divergent operations** and reconcile them by keeping both results: one
+  change-id, two commit-ids, a second head, and a workspace `@` on the copy that is
+  off the line. Scan with
+  `jj log -r '<base>::' -T 'change_id ++ "\n"' | sort | uniq -d` and
+  `jj op log | grep reconcile`; keep the copy a live workspace holds, fold the
+  stray (`jj rebase -r <head> -d <tip>`), abandon the twin. It is a race, not a
+  plan bug — keep the rewrite window short and re-scan after every pass.
+- Moving a base bookmark (typically `main`) onto the tip silently changes every
+  tool that used it as the base: `main::` revsets go empty and a cache keyed on
+  `jj diff --from main` freezes on its first result. Key content caches on the
+  tree (`jj diff --from root() --to <rev>`), not on a bookmark.
