@@ -29,6 +29,8 @@ exceptions.
 | `actor-state-ownership` | Designing actor-based frontend state and async work |
 | `durable-async-work` | Deciding whether work should be inline, queued, retried, cancelled, or resumed |
 | `safe-transformations` | Running codemods, migrations, generators, or source-to-source changes |
+| `create-verification-skill` | Giving agents a scripted, proven way to run and verify the real app locally |
+| `maintain-verification-skill` | Syncing a verification skill, CLI and feature map after a change to how the app is verified |
 | `focused-validation` | Choosing proportionate checks and reporting evidence |
 | `library-architecture` | Designing public APIs, registries, adapters, and extension points |
 | `frontend-evidence-audit` | Auditing frontend behavior with static and runtime evidence |
