@@ -22,11 +22,16 @@ set a different scope.
 - When I ask for investigation only or say not to implement, inspect the
   relevant source and evidence, then report conclusions and a concrete next
   step before editing.
-- Check JJ workspace ownership before history edits. Keep revisions focused
-  and leave other work intact.
+- Before history edits, check JJ workspace ownership. Never rewrite a revision
+  another workspace holds as its `@` or builds on; touch only revisions you
+  created and that no other workspace depends on.
+- Describe each revision as one logical change, with a Conventional Commit
+  title, a body explaining why, and a `Co-Authored-By` trailer.
 - Before rewriting JJ history, run `jj-rewrite-preflight <full-commit-id>`.
   Run `jj status` in each relevant workspace first; the preflight does not
   snapshot working copies.
+- After a rebase, check `jj log -r 'conflicts()'` and resolve any conflicts
+  on the target line.
 
 ### Evidence and operations
 
@@ -76,17 +81,30 @@ session in the profile.
 | Editing `~/.dsh/profiles/<name>/cordis.patch.yml` or `cordis.yml` | **Restart the DSH host process** |
 | Adding or removing a profile dependency in `package.json` | **Restart the DSH host process** |
 | Patching an agent preset row by id in the profile patch | **Restart the DSH host process** |
+| Editing DSH Host code, a settings namespace, or profile composition | **Restart the DSH host process** |
 | Enabling or disabling a plugin from the Settings GUI | No restart — takes effect live |
-| Rebuilding a client plugin bundle | Refresh the browser page |
+| Rebuilding a client plugin bundle with its HMR watcher active | HMR delivers it; no restart or manual refresh |
+| Rebuilding a client plugin bundle without HMR active | Refresh the browser after the build |
+
+The client HMR receiver delivers a rebuilt `dist/client.js` without a restart
+when the bundle watcher from the same checkout is running; HMR does not build the
+bundle. Changes to the Web shell or plain packages are not delivered by client
+HMR: rebuild their affected Web artifacts, then refresh the browser.
+
+Until the Host restarts, the page may pair a new client with old Host behavior.
+Decode Host snapshots once at the boundary with defaults, don't assume new fields,
+methods, or settings namespaces exist, and keep old keybinding or event owners
+until their replacements are live.
 
 The profile patch is read once at boot by `@cordisjs/plugin-include` and is not
 watched, so a saved patch does nothing until the process restarts. Restarting the
 host kills every open session, so ask the user to do it instead of killing the
 process yourself. To verify a patch without touching the live host, boot a second
-instance on a scratch port and delete it afterwards:
+instance on a scratch port. If the patch touches stored state, isolate it with a
+scratch `DSH_HOME`:
 
 ```bash
-dsh --profile web --port 31999 --no-open
+DSH_HOME=/private/tmp/dsh-verify dsh web --port 3199 --no-open
 ```
 
 ## Async questions

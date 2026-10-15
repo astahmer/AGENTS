@@ -37,10 +37,10 @@ description: >
 - **Never run `jj squash` or `jj describe` without `-m` or
   `--use-destination-message` from an agent shell.** Both open an editor and hang
   until the job is killed.
-- **Never `jj describe`, `jj squash` or `jj abandon` a revision another
-  workspace's `@` sits on.** That workspace's next snapshot turns it into a
-  divergent copy of the same change (same change-id, second commit-id); name only
-  revisions you created.
+- **Never rewrite** (`jj describe`, `jj squash`, `jj rebase`, `jj abandon`) a
+  revision another workspace holds as its `@` or builds on. Rewriting can leave
+  its checkout stale or create a divergent copy; touch only revisions you
+  created that no other workspace depends on.
 - **Never `jj op revert` an operation you already reverted.** Reverting a revert
   re-applies the original effect, so a chain of reverts lands somewhere you did not
   predict. `jj op revert` takes **one** operation, so a loop must run newest-first;
