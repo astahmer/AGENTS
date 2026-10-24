@@ -26,7 +26,8 @@ set a different scope.
   another workspace holds as its `@` or builds on; touch only revisions you
   created and that no other workspace depends on.
 - Describe each revision as one logical change, with a Conventional Commit
-  title, a body explaining why, and a `Co-Authored-By` trailer.
+  title and a body explaining why. Do not add `Co-Authored-By` trailers or local
+  agent handles to commit metadata; they are not GitHub collaborators.
 - Before rewriting JJ history, run `jj-rewrite-preflight <full-commit-id>`.
   Run `jj status` in each relevant workspace first; the preflight does not
   snapshot working copies.
