@@ -324,6 +324,13 @@ When the user asks "any [other] questions?" or "need anything from me?" — coll
 - Vite 8.1+
 - Oxlint + Oxfmt
 
+## Product and UI
+
+- Before adding code for an unlikely or hypothetical race or security problem, explain in simple words what could go wrong, how likely it is, and how much extra code it needs. Wait for the user's OK before adding it. Do not add guards for problems that cannot happen in practice.
+- Remove taglines, helper text, and secondary labels. If the screen needs them to make sense, fix the layout instead.
+- Use existing components, sizes, variants, interaction patterns, and design tokens first.
+- Say whether a UI change affects page layout or a component's internal styling.
+
 ## General code style
 
 - Use arrow functions over function declarations.
