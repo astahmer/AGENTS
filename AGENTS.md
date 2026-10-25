@@ -188,6 +188,11 @@ If the tool is only needed for a one-off session, use the ephemeral `comma` /
 <!-- ast-outline:start -->
 ## Code exploration — prefer `ast-outline` over full reads
 
+Use the Agent's `grep`/`glob` tools for lexical text search and file discovery.
+In the DSH web profile these are backed by `fff-search`. `ast-outline` is the
+complementary structural view for supported languages, not a replacement for
+text search.
+
 For `.cs`, `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, `.hh`, `.py`, `.pyi`,
 `.ts`, `.tsx`, `.js`, `.jsx`, `.java`, `.kt`, `.kts`, `.scala`, `.sc`,
 `.go`, `.rs`, `.php`, `.phtml`, `.rb`, `.rake`, `.gemspec`, `.ex`, `.exs`,
@@ -254,7 +259,7 @@ you already know the symbol:
    only want definitions, only call sites, etc.
    POSIX flags `-w` (whole word), `-l` (paths only), `-c` (counts),
    `-m N` (cap per file) work as in `grep` / `rg`. For non-symbol
-   patterns use your default search strategy.
+   patterns, use the Agent's `grep` tool; use `glob` for path discovery.
 
 `outline` and `digest` accept multiple paths in one call (files and
 directories, mixed languages OK) — batch instead of looping. Type
