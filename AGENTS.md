@@ -41,6 +41,16 @@ set a different scope.
   browser/runtime proof, and deployed behavior distinct.
 - For UI investigations, use real interactions. Include screenshots when I
   ask for visual proof.
+
+### Reply format after changes
+
+When a request asked for a change, the completion reply is short and scannable:
+
+- Summary as bullets of at most eight words each (`✓ tested x`, `⚠ bug a.js:9`).
+- The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
+  with removed and added forms side by side.
+- Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
+- Any question for me last, never mixed into the summary.
 - For data or infrastructure issues, inspect the live service and configured
   storage before changing state. Protect data and queued work; warn before
   interrupting an active process, service, or app.
