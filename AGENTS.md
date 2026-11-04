@@ -391,7 +391,9 @@ When the user asks "any [other] questions?" or "need anything from me?" — coll
 
 ## Effect
 
-- Read the Effect reference repository under `~/.references/effect` for API examples.
+- Read the Effect reference that matches the project's installed `effect`
+  version: `~/.references/effect-4.1.0` for 4.1. `~/.references/effect` is a
+  4.0 release candidate; its APIs differ from 4.1.
 - Use `Effect.fn` and `Effect.withSpan` for effectful functions.
 - Prefer Effect / @effect/platform APIs; fallback to `Effect.promise` when necessary.
 - Use qualified errors with `Schema.TaggedError`.
