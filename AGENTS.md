@@ -51,7 +51,9 @@ set a different scope.
 
 When a request asked for a change, the completion reply is short and scannable:
 
-- Summary as bullets of at most eight words each (`✓ tested x`, `⚠ bug a.js:9`).
+- Summary as a Markdown bullet list of at most eight words each, one `- ` item
+  per line (`- ✓ tested x`, `- ⚠ bug a.js:9`). A bare `✓` line has no list
+  marker, so Markdown joins it to the line above instead of starting a bullet.
 - The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
   with removed and added forms side by side.
 - Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
