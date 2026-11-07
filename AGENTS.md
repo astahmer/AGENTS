@@ -71,6 +71,15 @@ set a different scope.
 - Treat saved cookies and browser storage as login credentials. Keep them out
   of repositories, configuration, and memory.
 
+### Editing files
+
+- Read a file in this session before overwriting it.
+- When a write or edit is refused because the file was not read, changed since it
+  was read, or the quoted excerpt was missing or ambiguous, re-read the affected
+  region and retry with a smaller exact excerpt.
+- Never escalate to a whole-file overwrite to get past a refusal; quote the
+  smallest excerpt that is unique.
+
 ## DSH restart semantics
 
 When a DSH change needs a restart, say which kind — restarting the host process
