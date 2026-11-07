@@ -75,6 +75,13 @@ set a different scope.
 - Treat saved cookies and browser storage as login credentials. Keep them out
   of repositories, configuration, and memory.
 
+### Waiting and handoffs
+
+- Wait on a running job once instead of re-polling it; take one status snapshot
+  per decision; ask once and keep working.
+- End a turn only when a named thing will wake you: a child's result, a queued
+  message, or a scheduled reminder. If no wake exists, say so and schedule one.
+
 ### Editing files
 
 - Read a file in this session before overwriting it.
