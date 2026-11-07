@@ -41,6 +41,11 @@ set a different scope.
   browser/runtime proof, and deployed behavior distinct.
 - For UI investigations, use real interactions. Include screenshots when I
   ask for visual proof.
+- For data or infrastructure issues, inspect the live service and configured
+  storage before changing state. Protect data and queued work; warn before
+  interrupting an active process, service, or app.
+- Before extracting shared code, check its real callers. Share only stable
+  behavior used by multiple callers, at the narrowest useful boundary.
 
 ### Reply format after changes
 
@@ -51,11 +56,6 @@ When a request asked for a change, the completion reply is short and scannable:
   with removed and added forms side by side.
 - Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
 - Any question for me last, never mixed into the summary.
-- For data or infrastructure issues, inspect the live service and configured
-  storage before changing state. Protect data and queued work; warn before
-  interrupting an active process, service, or app.
-- Before extracting shared code, check its real callers. Share only stable
-  behavior used by multiple callers, at the narrowest useful boundary.
 
 ### Product, APIs, and naming
 
