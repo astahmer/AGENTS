@@ -20,7 +20,6 @@ exceptions.
 | `grill-me` | Stress-testing a plan or design through batched questions |
 | `jj-recover` | Diagnosing and recovering from Jujutsu errors and inconsistent history |
 | `jj-linearize` | Collapsing many Jujutsu heads into one linear line without losing live work |
-| `jj-merge-workspaces` | Unifying completed work across Jujutsu workspaces |
 | `library-documentation-first` | Verifying unfamiliar library APIs before implementation |
 | `product-description` | Describing product behavior from code and runtime evidence |
 | `security-review` | Reviewing authorization, validation, injection, and secret exposure |
