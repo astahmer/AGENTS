@@ -47,18 +47,6 @@ set a different scope.
 - Before extracting shared code, check its real callers. Share only stable
   behavior used by multiple callers, at the narrowest useful boundary.
 
-### Reply format after changes
-
-When a request asked for a change, the completion reply is short and scannable:
-
-- Summary as a Markdown bullet list of at most eight words each, one `- ` item
-  per line (`- ✓ tested x`, `- ⚠ bug a.js:9`). A bare `✓` line has no list
-  marker, so Markdown joins it to the line above instead of starting a bullet.
-- The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
-  with removed and added forms side by side.
-- Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
-- Any question for me last, never mixed into the summary.
-
 ### Product, APIs, and naming
 
 - Lack of analytics does not prove a feature is unused. Distinguish overlapping
@@ -322,15 +310,21 @@ When the user ends a task with an open-ended prompt like "next steps?", "anythin
 
 ## Response sections and feedback
 
-When proposing work, requesting feedback, or showcasing changes:
+A reply that shows work or asks something has two sections, in this order.
 
-- Use indexed items so the user can answer precisely: `1`, `2`, `3` for one
-  section; `A1`, `A2`, `B1` when there are multiple sections.
-- Put completed or proposed changes under a clearly labeled `SHOWCASE`
-  section when presenting them for review.
-- Add a clearly labeled `FEEDBACK NEEDED` section only when a real user
-  question or decision is needed. Put every question there, indexed, and keep
-  it separate from `SHOWCASE`; omit the section when there are no questions.
+**`SHOWCASE`** holds completed or proposed changes, indexed so they can be
+answered precisely: `1`, `2`, `3` for one section; `A1`, `A2`, `B1` when there
+are several. Inside it:
+
+- Summary as a Markdown bullet list of at most eight words each, one `- ` item
+  per line (`- ✓ tested x`, `- ⚠ bug a.js:9`). A bare `✓` line has no list
+  marker, so Markdown joins it to the line above instead of starting a bullet.
+- The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
+  with removed and added forms side by side.
+- Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
+
+**`FEEDBACK NEEDED`** holds every real question or decision, indexed the same
+way and kept out of `SHOWCASE`; omit the section when there are no questions.
 
 When the user asks "any [other] questions?" or "need anything from me?" — collect all pending unknowns and ask them in a **single batched message**. If a question can be answered by exploring the codebase, do that instead. If you have nothing, say "Nothing else — all good."
 
