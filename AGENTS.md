@@ -91,61 +91,10 @@ set a different scope.
 - Never escalate to a whole-file overwrite to get past a refusal; quote the
   smallest excerpt that is unique.
 
-## DSH restart semantics
+### Questions
 
-When a DSH change needs a restart, say which kind — restarting the host process
-and refreshing the browser page are different, and only the first ends every
-session in the profile.
-
-| Change | What it needs |
-|---|---|
-| Editing `~/.dsh/profiles/<name>/cordis.patch.yml` or `cordis.yml` | **Restart the DSH host process** |
-| Adding or removing a profile dependency in `package.json` | **Restart the DSH host process** |
-| Patching an agent preset row by id in the profile patch | **Restart the DSH host process** |
-| Editing DSH Host code, a settings namespace, or profile composition | **Restart the DSH host process** |
-| Enabling or disabling a plugin from the Settings GUI | No restart — takes effect live |
-| Rebuilding a client plugin bundle with its HMR watcher active | HMR delivers it; no restart or manual refresh |
-| Rebuilding a client plugin bundle without HMR active | Refresh the browser after the build |
-
-The client HMR receiver delivers a rebuilt `dist/client.js` without a restart
-when the bundle watcher from the same checkout is running; HMR does not build the
-bundle. Changes to the Web shell or plain packages are not delivered by client
-HMR: rebuild their affected Web artifacts, then refresh the browser.
-
-Until the Host restarts, the page may pair a new client with old Host behavior.
-Decode Host snapshots once at the boundary with defaults, don't assume new fields,
-methods, or settings namespaces exist, and keep old keybinding or event owners
-until their replacements are live.
-
-The profile patch is read once at boot by `@cordisjs/plugin-include` and is not
-watched, so a saved patch does nothing until the process restarts. Restarting the
-host kills every open session, so ask the user to do it instead of killing the
-process yourself. To verify a patch without touching the live host, boot a second
-instance on a scratch port. If the patch touches stored state, isolate it with a
-scratch `DSH_HOME`:
-
-```bash
-DSH_HOME=/private/tmp/dsh-verify dsh web --port 3199 --no-open
-```
-
-## Async questions
-
-`ask_user_question` runs in timed mode, and its `timeout` argument is the entire
-mode selector:
-
-- `timeout: -1` — block until the user answers. Use only when the work cannot
-  continue without the answer.
-- any positive number of seconds — the call returns `{ pending: true, callId }`
-  and the agent keeps working. The question stays answerable, and a later answer
-  arrives as a `user-question-reply` user message.
-
-Prefer async. A blocking question stalls the turn and everything queued behind
-it, while a pending question costs no tokens and still gets answered. Reach for
-`-1` only when the answer is genuinely required to proceed, such as a
-destructive confirmation or a value the agent cannot discover on its own.
-
-Batch related questions into one call: the pending path releases the agent once
-per call, not once per question.
+Prefer a non-blocking question, batch related questions into one call, and block
+only when the work cannot continue without the answer.
 
 ## Nix-backed debugging
 
@@ -209,7 +158,7 @@ If the tool is only needed for a one-off session, use the ephemeral `comma` /
 ## Code exploration — prefer `ast-outline` over full reads
 
 Use the Agent's `grep`/`glob` tools for lexical text search and file discovery.
-In the DSH web profile these are backed by `fff-search`. `ast-outline` is the
+In some profiles these are backed by `fff-search`. `ast-outline` is the
 complementary structural view for supported languages, not a replacement for
 text search.
 
