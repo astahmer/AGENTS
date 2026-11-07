@@ -33,6 +33,10 @@ set a different scope.
   snapshot working copies.
 - After a rebase, check `jj log -r 'conflicts()'` and resolve any conflicts
   on the target line.
+- Before a long session loses its earlier turns, restate the goal, the decisions
+  taken and the open threads in the reply or a durable file.
+- A thread that has stopped making progress should be stopped and handed off, not
+  restarted.
 
 ### Evidence and operations
 
