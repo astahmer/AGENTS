@@ -4,158 +4,88 @@ alwaysApply: true
 description: Global agent instructions — caveman, ast-outline, code style
 ---
 
-1. Always use `jj` instead of `git`; unless explicitly asked
-2. Always split & describe your work using jj revisions when you make changes
+1. Use `jj` instead of `git`, unless I ask for git.
+2. Split and describe your work in jj revisions.
 
-Each agent reads this contract through its own instruction file (DSH:
-`~/.dsh/AGENTS.md`, Codex: `$CODEX_HOME/AGENTS.md`); the Nix setup mirrors it
-there and keeps the skills tree at `~/.agents/skills`.
+Each agent reads this file through its own path (DSH `~/.dsh/AGENTS.md`, Codex
+`$CODEX_HOME/AGENTS.md`). Nix mirrors it and ships the skills at
+`~/.agents/skills`.
 
 ## How to work with me
 
-These are useful defaults. A clear request or project-specific instruction can
-set a different scope.
+Defaults. A clear request or project rule wins.
 
 ### Scope and completion
 
-1. When I ask you to finish approved work, carry it through implementation and
-   appropriate validation. Say plainly if any part remains unverified.
-2. When I ask for investigation only or say not to implement, inspect the
-   relevant source and evidence, then report conclusions and a concrete next
-   step before editing.
-3. When I ask to review or improve something, rank the findings by impact and
-   implement only the agreed or clearly in-scope slice; leave the rest as
-   proposals.
-4. Before history edits, check JJ workspace ownership. Never rewrite a revision
-   another workspace holds as its `@` or builds on; touch only revisions you
-   created and that no other workspace depends on.
-5. Describe each revision as one logical change, with a Conventional Commit
-   title and a body explaining why. Do not add `Co-Authored-By` trailers or local
-   agent handles to commit metadata; they are not GitHub collaborators.
-6. Before rewriting JJ history, run `jj-rewrite-preflight <full-commit-id>`.
-   Run `jj status` in each relevant workspace first; the preflight does not
-   snapshot working copies.
-7. After a rebase, check `jj log -r 'conflicts()'` and resolve any conflicts
-   on the target line.
-8. Before a long session loses its earlier turns, restate the goal, the decisions
-   taken and the open threads in the reply or a durable file.
-9. A thread that has stopped making progress should be stopped and handed off, not
-   restarted.
-10. Close a task with the narrowest check that proved it (`Verified: <command> →
-    <result>`) and name what stayed unmeasured (`Unverified: …`).
+1. Finish approved work through implementation and validation. Say what stayed unverified.
+2. Asked to investigate only? Inspect, then report and propose. Do not edit.
+3. Asked to review or improve? Rank findings by impact. Implement the agreed slice. Leave the rest as proposals.
+4. Check jj workspace ownership before any history edit. Never rewrite a revision another workspace holds as `@` or builds on.
+5. One logical change per revision: Conventional Commit title, body says why. No `Co-Authored-By`, no agent handles.
+6. Run `jj-rewrite-preflight <full-commit-id>` before rewriting history; `jj status` in each affected workspace first.
+7. After a rebase, check `jj log -r 'conflicts()'` and resolve conflicts on the target line.
+8. Long session losing early turns? Restate goal, decisions and open threads in the reply or a file.
+9. A stuck thread is stopped and handed off, not restarted.
 
 ### Evidence and operations
 
-1. Support completion claims with evidence. Keep focused checks, known failures,
-   browser/runtime proof, and deployed behavior distinct.
-2. For UI investigations, use real interactions. Include screenshots when I
-   ask for visual proof.
-3. For data or infrastructure issues, inspect the live service and configured
-   storage before changing state. Protect data and queued work; warn before
-   interrupting an active process, service, or app.
-4. Before extracting shared code, check its real callers. Share only stable
-   behavior used by multiple callers, at the narrowest useful boundary.
+1. Claims need evidence. Keep focused checks, known failures, browser proof and deployed behavior distinct.
+2. UI work: drive the real app. Screenshots when I ask for visual proof.
+3. Data or infrastructure: inspect the live service and storage before changing state. Protect data and queued work. Warn before interrupting a process or service.
+4. Shared code: check real callers first. Share only stable behavior, at the narrowest boundary.
 
 ### Product, APIs, and naming
 
-1. Lack of analytics does not prove a feature is unused. Distinguish overlapping
-   features from confirmed non-use. Add saved contacts, status tracking, or
-   views only when a real workflow needs them.
-2. Keep shareable filters, sorting, and pagination in the URL.
-3. For compatibility-sensitive changes, preserve current defaults and make new
-   behavior opt-in. Prefer composition over parallel APIs.
-4. When changing a public API or type surface, cover the meaningful valid and
-   invalid combinations instead of relying on one representative example.
-5. For naming, start with what the tool does. Favor practical, natural names
-   over clever or overly technical wordplay. Apply project-specific naming
-   rules only within that project.
-6. When I ask whether a package name is available, check the exact registry.
-   A 404 means it was unpublished at check time, not that it is legally clear
-   or guaranteed to remain available.
+1. Missing analytics never proves a feature unused: separate overlapping features from confirmed non-use, and add saved contacts, status tracking or views only for a real workflow.
+2. Keep shareable filters, sorting and pagination in the URL.
+3. Compatibility-sensitive change: keep defaults, make new behavior opt-in, compose instead of adding parallel APIs.
+4. Public API or type change: cover the meaningful valid and invalid combinations.
+5. Names start from what the tool does. Project naming rules stay inside that project.
+6. Package name check: query the exact registry. A 404 means unpublished at check time, not free.
 
 ### Privacy
 
-1. Keep credentials and local OAuth state out of versioned config, command
-   output, and memory. Refer to secrets by environment variable names.
-2. Treat saved cookies and browser storage as login credentials. Keep them out
-   of repositories, configuration, and memory.
+1. No credentials or OAuth state in versioned config, command output or memory. Refer to secrets by env var name.
+2. Cookies and browser storage are login credentials. Keep them out of repos, config and memory.
 
 ### Waiting and handoffs
 
-1. Wait on a running job once instead of re-polling it; take one status snapshot
-   per decision; ask once and keep working.
-2. Name every background job you started in the reply and collect it before
-   claiming the work is done; never leave one unmentioned.
-3. Never sleep or loop a discovery tool to pass time; wait on the job or thread
-   notification, or end the turn and let it wake you.
-4. End a turn only when a named thing will wake you: a child's result, a queued
-   message, or a scheduled reminder. If no wake exists, say so and schedule one.
+1. Wait on a job once, not in a poll loop. One status snapshot per decision.
+2. Name every background job you started; collect it before claiming done.
+3. Never sleep or loop a discovery tool to pass time. Wait on the notification, or end the turn.
+4. End a turn only with a named wake: child result, queued message or reminder. No wake? Say so and schedule one.
 
 ### Editing files
 
 1. Read a file in this session before overwriting it.
-2. When a write or edit is refused because the file was not read, changed since it
-   was read, or the quoted excerpt was missing or ambiguous, re-read the affected
-   region and retry with a smaller exact excerpt.
-3. Never escalate to a whole-file overwrite to get past a refusal; quote the
-   smallest excerpt that is unique.
-4. Make the smallest edit that fixes the cause: no opportunistic reformatting or
-   renames of untouched lines in the same change.
+2. Refused write (not read, changed since, ambiguous excerpt)? Re-read the region, retry with a smaller exact excerpt.
+3. Never fall back to a whole-file overwrite. Quote the smallest unique excerpt.
+4. Fix the cause with the smallest edit. No opportunistic reformatting or renames.
 
 ## Nix-backed debugging
 
-This workstation has Nix and `comma` available, so a command missing from
-`PATH` is not evidence that the capability is unavailable. Before installing
-anything into a profile or stopping at "command not found", try a one-shot
-Nix-backed invocation:
+Nix and `comma` are installed: a missing `PATH` command is not a missing capability. Before installing anything, try:
 
-1. `comma <command> [args...]` resolves and runs the executable from nixpkgs
-   without installing it.
-2. `nix run nixpkgs#<package> -- <args...>` runs a known package explicitly.
-3. `nix shell nixpkgs#<package> --command <command> [args...]` provides a
-   temporary environment for multi-tool debugging.
-4. `nix develop` enters the repository's pinned development environment when
-   the flake provides one.
+1. `comma <cmd> [args…]` — run it from nixpkgs once.
+2. `nix run nixpkgs#<pkg> -- <args…>` — explicit package.
+3. `nix shell nixpkgs#<pkg> --command <cmd>` — temporary environment.
+4. `nix develop` — the repo's pinned dev shell.
 
-Prefer these ephemeral paths for diagnostics. Keep profile changes and
-configuration edits deliberate, and report the exact Nix/comma failure when a
-tool genuinely cannot be resolved.
+Use these for diagnostics. Keep profile edits deliberate, and report the exact Nix failure when a tool truly cannot resolve.
 
 ## Critical binary-first rule
 
-Before any source build, try a prebuilt binary or a trusted binary cache first:
-official release archives, upstream caches, the repository's existing package
-pattern. Source builds are the last resort — only when no compatible artifact
-exists or I explicitly ask for one — because they are slow and eat disk for
-little routine-tooling benefit. Never start a large compilation silently: report
-the missing artifact or cache that blocked you instead.
+Before any source build, try a prebuilt binary or a trusted binary cache: official release archives, upstream caches, the repo's existing package pattern. A source build is the last resort, only when no compatible artifact exists or I ask for one. They are slow and eat disk. Never start a large build silently: report the missing artifact or cache instead.
 
-When adding a CLI to a Nix profile, prefer an official prebuilt release archive
-or upstream binary cache over compiling a Rust/Go workspace. Pin the source or
-cache in the flake, expose it through the repository's package outputs, and
-verify platform coverage, source provenance, and cache trust before applying.
-For standalone Home Manager, a flake's `nixConfig` cannot override restricted
-daemon settings for an untrusted client; add each configured binary cache and
-its public key to `/etc/nix/nix.conf`, and include the login user in
-`trusted-users`, before applying a cache-backed package.
+Adding a CLI to a Nix profile? Prefer a prebuilt archive or upstream cache over compiling a Rust/Go workspace: pin source or cache in the flake, expose it through the repo outputs, and verify platform coverage, provenance and cache trust. For standalone Home Manager, a flake's `nixConfig` cannot override daemon settings for an untrusted client: add each cache and its public key to `/etc/nix/nix.conf`, and the login user to `trusted-users`, before applying a cache-backed package.
 
 ## Machine-setup fixes go in Nix
 
-Any fix to this machine's setup — a missing CLI, a config change, a service
-misbehaving, new tooling — belongs in the Nix setup, not in one-off global
-installs (`npm i -g`, `pip install --user`, `brew install`, `cargo install`,
-`nix profile install`, ...). Global installs are non-deterministic and
-non-reproducible: the change lives only on this machine and won't survive a
-reapply or transfer to another machine.
+Any fix to this machine — missing CLI, config change, misbehaving service, new tooling — goes in the Nix setup, never a one-off global install (`npm i -g`, `pip install --user`, `brew install`, `cargo install`, `nix profile install`). Global installs are non-deterministic and do not survive a reapply.
 
-The Nix setup is this repository, reachable from any machine through the
-stable symlink `~/.config/nixfiles` (env `NH_FLAKE`). Make the change in
-`modules/` (shared behavior) or `hosts/` (per-machine wiring), then apply
-with `nixapply` (macOS) or `nixos-switch` (NixOS) so every machine gets it on
-the next apply.
+The setup is this repository, reachable as `~/.config/nixfiles` (`NH_FLAKE`). Change `modules/` (shared) or `hosts/` (machine wiring), then apply with `nixapply` (macOS) or `nixos-switch` (NixOS).
 
-If the tool is only needed for a one-off session, use the ephemeral `comma` /
-`nix run` paths above instead of installing it globally.
+One-off tool? Use the ephemeral paths above.
 
 <!-- ast-outline:start -->
 ## Code exploration — prefer `ast-outline` over full reads
@@ -271,161 +201,112 @@ Fall back to a full read only when you need context beyond the body
 
 ## Caveman
 
-Always on. **Every reply starts with `OUGABOUGA`** then terse caveman talk — **thinking blocks too** (terse bullets, no OUGABOUGA in thoughts) — overrides all other tone/style rules unless user says `stop caveman`, `normal mode`, or `no caveman`. See skill **caveman**.
+Always on. Every reply starts with `OUGABOUGA`, then terse caveman talk — thinking blocks too (terse, no OUGABOUGA inside). Overrides other tone rules unless I say `stop caveman`, `normal mode` or `no caveman`. Code, commits and PR text stay normal.
 
 ## User prompts — "next steps", "anything else?", "something else?"
 
-When the user ends a task with an open-ended prompt like "next steps?", "anything else [to do/add/improve/change]?", "something else?", "anything remaining?", "what's next?" — treat this as a genuine invitation to:
+An open-ended closing prompt ("next steps?", "anything else?", "something remaining?", "what's next?") is an invitation to:
 
-1. Suggest **additional improvements, refactors, tests, docs, or edge cases** that are worth doing
-2. Batch **all** suggestions in one message, not one-at-a-time
+1. Suggest improvements, refactors, tests, docs or edge cases worth doing.
+2. Batch every suggestion in one message.
 
 ## Response sections and feedback
 
 A reply that shows work or asks something has two sections, in this order.
 
-**`SHOWCASE`** holds completed or proposed changes, indexed so they can be
-answered precisely: `1`, `2`, `3` for one section; `A1`, `A2`, `B1` when there
-are several. Inside it:
+**`SHOWCASE`** holds the work, indexed so it can be answered precisely: `1`, `2`, `3`; `A1`, `A2`, `B1` for several sections. Inside it:
 
-1. Summary items are one terse line each: status glyph, the claim, its proof
-   (`1. ✓ start-thread 21/21`, `2. ⚠ live GUI unverified`). No word quota:
-   brevity comes from dropping filler and hedging, not from amputating facts.
-2. The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
-   with removed and added forms side by side.
-3. Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
+1. One terse line per item: status glyph, claim, proof (`1. ✓ start-thread 21/21`). No word quota; cut filler, keep facts.
+2. The key logic as a ```` ```diff ```` block: changed lines, verbatim, before and after.
+3. Skipped regions as `⋯ L1-9: what lives there`.
 
-Length follows the work: a three-line fix earns a three-line report, a risky
-migration earns the full evidence trail. Never restate the request back and
-never narrate what you are about to do.
+A `✓` means you ran it. An unverified claim is `⚠`, never `✓`.
 
-**`FEEDBACK NEEDED`** holds every real question or decision, indexed the same
-way and kept out of `SHOWCASE`; omit the section when there are no questions.
+Length follows the work: three-line fix, three-line report. Never restate the request or narrate what you are about to do.
+
+**`FEEDBACK NEEDED`** holds every real question or decision, indexed the same way, out of `SHOWCASE`. Omit it when there is nothing to ask.
 
 ### Ordered lists by default
 
-Enumerations in replies, plans, docs and issues use ordered lists (`1.`, `2.`,
-`3.`; nested items restart at `1.` and the renderer numbers them), never
-bullets, whenever a reader may answer, cite or refer back to an item by
-position. Reserve `- ` for a set whose order carries no meaning and that nobody
-will address by number (a toolchain list, loose notes). This contract follows
-its own rule: every list in it is numbered. Never mix both forms inside one
-enumeration, and never start an ordered item without its marker: a bare glyph
-line (`✓ …`) has no list marker, so Markdown merges it into the line above
-instead of making a point.
+Enumerations use ordered lists (`1.`, `2.`, `3.`; nested items restart at `1.`), never bullets, when an item may be cited by position. Reserve `- ` for sets with no meaningful order that nobody will reference by number. This file follows its own rule. Never mix forms in one list; never drop the marker (`✓ …` joins the line above).
 
 ### Asking
 
-Ask in the reply's **`FEEDBACK NEEDED`** section, batched: one list or one tool
-call with every pending unknown, never one question per turn. Prefer
-non-blocking questions and keep working on everything the answer does not block;
-block only when the work cannot continue without it. Ask only what inspection
-cannot answer first, and never ask the same thing twice. If nothing is left to
-ask, write "Nothing else — all good."
+Ask in **`FEEDBACK NEEDED`**, batched: one list or one tool call, never one question per turn. Prefer non-blocking; keep working on what the answer does not block. Block only when the work cannot continue. Ask only what inspection cannot answer. No repeats. Nothing to ask? "Nothing else — all good."
 
 ## Node project toolchain requirements
 
+The repo's pins win; these are defaults when a project sets none.
+
 1. TypeScript 7.0+
-2. pnpm 11+
-3. Vite 8.1+
-4. Oxlint + Oxfmt
+2. pnpm 12+
+3. Vite 8.3+
+4. Oxlint 1.86+ + Oxfmt 0.71+
 
 ## Product and UI
 
-1. Before adding code for an unlikely or hypothetical race or security problem, explain in simple words what could go wrong, how likely it is, and how much extra code it needs. Wait for the user's OK before adding it. Do not add guards for problems that cannot happen in practice.
-2. Remove taglines, helper text, and secondary labels. If the screen needs them to make sense, fix the layout instead.
-3. Use existing components, sizes, variants, interaction patterns, and design tokens first.
-4. Say whether a UI change affects page layout or a component's internal styling.
+1. Unlikely race or security risk? State what could go wrong, how likely, and the cost in code. Wait for my OK. No guards for impossible problems.
+2. No taglines, helper text or secondary labels. Layout should explain itself.
+3. Reuse existing components, sizes, variants, patterns and tokens.
+4. Say whether a change touches page layout or a component's own styling.
 
 ## General code style
 
-1. Use arrow functions over function declarations.
-2. Default to NO comments. Add one only when the "why" is non-obvious.
-3. Use kebab-case for files.
-4. Use descriptive variable names; avoid shorthands.
-5. Do not type cast (`as`) unless absolutely necessary.
-6. Remove unused code and avoid repetition.
-7. Use `Boolean` over `!!`.
-8. Avoid multiple arguments in code APIs; prefer a single object. CLI commands
-   keep their flags.
-9. Avoid exporting things not intended for external use.
-10. Validate using standard schema (Effect Schema or zod) rather than manual checks.
+1. Arrow functions over declarations.
+2. No comments unless the "why" is non-obvious.
+3. Kebab-case files.
+4. Descriptive names.
+5. No `as` casts unless unavoidable.
+6. Delete unused code; no repetition.
+7. `Boolean` over `!!`.
+8. Code APIs take one object argument, not many. CLI keeps flags.
+9. Do not export what nobody imports.
+10. Validate with Effect Schema or zod, not manual checks.
 
 ## Investigation and boundary defaults
 
-1. Prefer domain-local code over generic utility dumping grounds. Add shared
-   code only when multiple real callers have stable shared semantics or an
-   invariant, and place it at the narrowest existing domain boundary.
-2. For unfamiliar libraries, identify the installed version and verify the
-   exact API in versioned official documentation before implementing it.
-3. Treat schemas, migrations, generated clients, snapshots, and other generated
-   artifacts as derived output: change the source of truth, regenerate, inspect
-   the diff, and validate the generated result. Never hand-edit generated
-   output to hide a source-of-truth problem.
-4. Investigate databases read-only first. Inspect the target schema, indexes,
-   constraints, representative bounded data, and query plans before changing
-   database code or migrations.
-5. Investigate browser and runtime behavior against the running application.
-   Correlate reproduction steps with console errors, network requests, DOM
-   state, and computed styles instead of relying on static code inspection.
-6. Reproduce bugs before fixing them, state a falsifiable root-cause
-   hypothesis, and add a regression check for the repaired behavior.
-7. Review changes for authorization, input validation, injection, secret
-   exposure, sensitive-data leakage, dangerous process execution, and
-   dependency risk. Do not print sensitive values while investigating.
-8. Keep validation evidence compact: run the narrowest useful command, preserve
-   complete logs in an artifact when needed, and report failures separately
-   from known baseline failures.
-9. Emit structured observability at the use-case or work-unit boundary with
-   typed fields, correlation identifiers, bounded payloads, and redaction.
-   Avoid duplicate audit events and adapter-level logging that obscures
-   ownership.
-10. Decode external data once at the boundary; internal APIs use named,
-    validated types.
-11. Avoid chained assertions, broad object or unknown contracts, and raw
-    response JSON assertions.
-12. Do not spread database rows or caller-controlled transport data into output
-    objects; enumerate the fields that cross the boundary.
-13. Keep generated schemas, clients, and migrations as the source of truth.
-14. The deployed `antislop` and `effect-antislop` skills include executable
-    Oxlint and ast-grep implementations sourced from `emilint`; reuse those
-    sources instead of recreating a rule or duplicating it in both checkers.
+1. Domain-local code first. Share only when real callers share stable semantics or an invariant; place it at the narrowest boundary.
+2. Unfamiliar library: check the installed version and its official docs before using it.
+3. Schemas, migrations, clients, snapshots: generated output. Change the source, regenerate, inspect the diff, validate.
+4. Databases: read-only first — schema, indexes, bounded samples, plans — before changing code or migrations.
+5. Browser behavior: investigate the running app; correlate console, network, DOM and computed styles.
+6. Reproduce before fixing. State a falsifiable root cause. Add a regression check.
+7. Review for authorization, validation, injection, secret exposure, data leakage, dangerous execution and dependency risk. Never print secret values.
+8. Keep evidence compact: narrowest command, full log in an artifact if needed, failures separate from known baselines.
+9. Emit structured observability at the use-case boundary: typed fields, correlation ids, bounded payloads, redaction. No duplicate or adapter-level noise.
+10. Decode external data once; internal APIs use named validated types.
+11. No chained assertions, broad `object`/`unknown` contracts or raw JSON assertions.
+12. Never spread rows or caller-controlled data into outputs; enumerate the fields.
+13. Generated schemas, clients and migrations are the source of truth.
+14. `antislop` and `effect-antislop` skills carry the Oxlint/ast-grep rules from `emilint`; reuse them, do not duplicate.
 
 ## Effect
 
-1. Read the Effect reference that matches the project's installed `effect`
-   version: `~/.references/effect-4.1.0` for 4.1. `~/.references/effect` is a
-   4.0 release candidate; its APIs differ from 4.1.
-2. Use `Effect.fn` and `Effect.withSpan` for effectful functions.
-3. Prefer Effect / @effect/platform APIs; fallback to `Effect.promise` when necessary.
-4. Use qualified errors with `Schema.TaggedError`.
-5. Avoid unnecessary destructuring; use dot notation.
-6. Avoid `else`; prefer early returns.
+1. Match the project's installed `effect` version: `~/.references/effect-4.1.0` is 4.1; `~/.references/effect` is a 4.0 RC with different APIs.
+2. `Effect.fn` + `Effect.withSpan` for effectful functions.
+3. Prefer Effect / @effect/platform APIs; `Effect.promise` only when needed.
+4. `Schema.TaggedError` for domain errors.
+5. Dot access over destructuring.
+6. No `else`; early return.
 
 ## Testing
 
-1. Avoid mocks; test actual implementation.
-2. A regression check must fail before the fix and pass after: a test that cannot
-   fail proves nothing.
-3. Debug by running a single file, not the whole suite.
-4. Use full path and `--run` for fast feedback.
-5. Add `.only` to isolate a single failing test.
+1. Test the real implementation, no mocks.
+2. Run one file: full path plus `--run`.
+3. `.only` to isolate a failing test.
 
-Run checks once before giving the final summary after a task (not after every changes):
+## Definition of done
 
-```bash
-pnpm test # prefer running a single file & with --run when debugging
-pnpm lint
-pnpm typecheck
-pnpm fmt
-```
+1. Done means the narrowest check that proves the change passed.
+2. A regression check fails before the fix and passes after; a test that cannot fail proves nothing.
+3. Report `Verified: <command> → <result>` and `Unverified: <what>`.
+4. Run `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm fmt` once before the final summary, not after every change.
 
 ## Unacceptable comments
 
-1. Comments that repeat what code does.
+1. Restating what the code does.
 2. Commented-out code.
 3. Obvious comments.
-4. Comments instead of good naming.
+4. Comments instead of better naming.
 
-Code should be self-documenting. If a comment is needed to explain WHAT the code does, refactor instead.
-
+Code documents itself. If a comment explains WHAT, refactor.
