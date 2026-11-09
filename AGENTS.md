@@ -86,7 +86,9 @@ set a different scope.
    per decision; ask once and keep working.
 2. Name every background job you started in the reply and collect it before
    claiming the work is done; never leave one unmentioned.
-3. End a turn only when a named thing will wake you: a child's result, a queued
+3. Never sleep or loop a discovery tool to pass time; wait on the job or thread
+   notification, or end the turn and let it wake you.
+4. End a turn only when a named thing will wake you: a child's result, a queued
    message, or a scheduled reminder. If no wake exists, say so and schedule one.
 
 ### Editing files
@@ -99,11 +101,6 @@ set a different scope.
    smallest excerpt that is unique.
 4. Make the smallest edit that fixes the cause: no opportunistic reformatting or
    renames of untouched lines in the same change.
-
-### Questions
-
-Prefer a non-blocking question, batch related questions into one call, and block
-only when the work cannot continue without the answer.
 
 ## Nix-backed debugging
 
@@ -126,21 +123,18 @@ tool genuinely cannot be resolved.
 
 ## Critical binary-first rule
 
-**Very important:** Before any source build, first try to download a compatible
-prebuilt binary or use a trusted binary cache. This applies to Nix packages,
-CLI tools, and their dependencies. Check official release archives, upstream
-caches, and the repository's existing package pattern first. Source builds are
-the last resort: use them only when no compatible artifact exists or the user
-explicitly asks for a source build. Never start a large compilation silently;
-report the missing artifact or cache when it blocks the task because builds are
-slow and consume substantial disk space for little routine-tooling benefit.
+Before any source build, try a prebuilt binary or a trusted binary cache first:
+official release archives, upstream caches, the repository's existing package
+pattern. Source builds are the last resort — only when no compatible artifact
+exists or I explicitly ask for one — because they are slow and eat disk for
+little routine-tooling benefit. Never start a large compilation silently: report
+the missing artifact or cache that blocked you instead.
 
 When adding a CLI to a Nix profile, prefer an official prebuilt release archive
 or upstream binary cache over compiling a Rust/Go workspace. Pin the source or
 cache in the flake, expose it through the repository's package outputs, and
 verify platform coverage, source provenance, and cache trust before applying.
-Use source builds only when no compatible prebuilt artifact exists. For
-standalone Home Manager, a flake's `nixConfig` cannot override restricted
+For standalone Home Manager, a flake's `nixConfig` cannot override restricted
 daemon settings for an untrusted client; add each configured binary cache and
 its public key to `/etc/nix/nix.conf`, and include the login user in
 `trusted-users`, before applying a cache-backed package.
@@ -322,10 +316,12 @@ instead of making a point.
 
 ### Asking
 
-When the user asks "any [other] questions?" or "need anything from me?" —
-collect all pending unknowns and ask them in a **single batched message**. Ask
-only what inspection cannot answer first; if nothing is left, say "Nothing else
-— all good."
+Ask in the reply's **`FEEDBACK NEEDED`** section, batched: one list or one tool
+call with every pending unknown, never one question per turn. Prefer
+non-blocking questions and keep working on everything the answer does not block;
+block only when the work cannot continue without it. Ask only what inspection
+cannot answer first, and never ask the same thing twice. If nothing is left to
+ask, write "Nothing else — all good."
 
 ## Node project toolchain requirements
 
@@ -409,9 +405,11 @@ only what inspection cannot answer first; if nothing is left, say "Nothing else
 ## Testing
 
 1. Avoid mocks; test actual implementation.
-2. Debug by running a single file, not the whole suite.
-3. Use full path and `--run` for fast feedback.
-4. Add `.only` to isolate a single failing test.
+2. A regression check must fail before the fix and pass after: a test that cannot
+   fail proves nothing.
+3. Debug by running a single file, not the whole suite.
+4. Use full path and `--run` for fast feedback.
+5. Add `.only` to isolate a single failing test.
 
 Run checks once before giving the final summary after a task (not after every changes):
 
