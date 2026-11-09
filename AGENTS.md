@@ -285,15 +285,25 @@ A reply that shows work or asks something has two sections, in this order.
 answered precisely: `1`, `2`, `3` for one section; `A1`, `A2`, `B1` when there
 are several. Inside it:
 
-- Summary as a Markdown bullet list of at most eight words each, one `- ` item
-  per line (`- ✓ tested x`, `- ⚠ bug a.js:9`). A bare `✓` line has no list
-  marker, so Markdown joins it to the line above instead of starting a bullet.
-- The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
-  with removed and added forms side by side.
-- Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
+1. Summary as a numbered list of at most eight words each, one `1. ` item per
+   line (`1. ✓ tested x`, `2. ⚠ bug a.js:9`). A numbered item keeps its marker
+   even when a glyph starts the text.
+2. The key logic as a ```` ```diff ```` block: the lines that changed, verbatim,
+   with removed and added forms side by side.
+3. Regions you skipped as `⋯ L1-9: what lives there`, so the omission is explicit.
 
 **`FEEDBACK NEEDED`** holds every real question or decision, indexed the same
 way and kept out of `SHOWCASE`; omit the section when there are no questions.
+
+## Ordered lists by default
+
+Enumerations in replies, plans, docs and issues use ordered lists (`1.`, `2.`,
+`3.`, nested `a.`, `b.`), never bullets, whenever a reader may answer, cite or
+refer back to an item by position. Reserve `- ` for a set whose order carries
+no meaning and that nobody will address by number (a toolchain list, loose
+notes). Never mix both forms inside one enumeration, and never start an ordered
+item without its marker: a bare glyph line (`✓ …`) has no list marker, so
+Markdown merges it into the line above instead of making a point.
 
 When the user asks "any [other] questions?" or "need anything from me?" — collect all pending unknowns and ask them in a **single batched message**. If a question can be answered by exploring the codebase, do that instead. If you have nothing, say "Nothing else — all good."
 
