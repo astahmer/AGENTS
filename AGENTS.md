@@ -4,8 +4,8 @@ alwaysApply: true
 description: Global agent instructions — caveman, ast-outline, code style
 ---
 
-- Always use `jj` instead of `git`; unless explicitly asked
-- Always split & describe your work using jj revisions when you make changes
+1. Always use `jj` instead of `git`; unless explicitly asked
+2. Always split & describe your work using jj revisions when you make changes
 
 Codex loads this global contract from CODEX_HOME/AGENTS.md; the Nix setup
 mirrors it there while keeping the skills tree at ~/.agents/skills.
@@ -17,79 +17,79 @@ set a different scope.
 
 ### Scope and completion
 
-- When I ask you to finish approved work, carry it through implementation and
-  appropriate validation. Say plainly if any part remains unverified.
-- When I ask for investigation only or say not to implement, inspect the
-  relevant source and evidence, then report conclusions and a concrete next
-  step before editing.
-- Before history edits, check JJ workspace ownership. Never rewrite a revision
-  another workspace holds as its `@` or builds on; touch only revisions you
-  created and that no other workspace depends on.
-- Describe each revision as one logical change, with a Conventional Commit
-  title and a body explaining why. Do not add `Co-Authored-By` trailers or local
-  agent handles to commit metadata; they are not GitHub collaborators.
-- Before rewriting JJ history, run `jj-rewrite-preflight <full-commit-id>`.
-  Run `jj status` in each relevant workspace first; the preflight does not
-  snapshot working copies.
-- After a rebase, check `jj log -r 'conflicts()'` and resolve any conflicts
-  on the target line.
-- Before a long session loses its earlier turns, restate the goal, the decisions
-  taken and the open threads in the reply or a durable file.
-- A thread that has stopped making progress should be stopped and handed off, not
-  restarted.
+1. When I ask you to finish approved work, carry it through implementation and
+   appropriate validation. Say plainly if any part remains unverified.
+2. When I ask for investigation only or say not to implement, inspect the
+   relevant source and evidence, then report conclusions and a concrete next
+   step before editing.
+3. Before history edits, check JJ workspace ownership. Never rewrite a revision
+   another workspace holds as its `@` or builds on; touch only revisions you
+   created and that no other workspace depends on.
+4. Describe each revision as one logical change, with a Conventional Commit
+   title and a body explaining why. Do not add `Co-Authored-By` trailers or local
+   agent handles to commit metadata; they are not GitHub collaborators.
+5. Before rewriting JJ history, run `jj-rewrite-preflight <full-commit-id>`.
+   Run `jj status` in each relevant workspace first; the preflight does not
+   snapshot working copies.
+6. After a rebase, check `jj log -r 'conflicts()'` and resolve any conflicts
+   on the target line.
+7. Before a long session loses its earlier turns, restate the goal, the decisions
+   taken and the open threads in the reply or a durable file.
+8. A thread that has stopped making progress should be stopped and handed off, not
+   restarted.
 
 ### Evidence and operations
 
-- Use commands directly. Do not prefix commands with RTK or its proxy wrapper.
-- Support completion claims with evidence. Keep focused checks, known failures,
-  browser/runtime proof, and deployed behavior distinct.
-- For UI investigations, use real interactions. Include screenshots when I
-  ask for visual proof.
-- For data or infrastructure issues, inspect the live service and configured
-  storage before changing state. Protect data and queued work; warn before
-  interrupting an active process, service, or app.
-- Before extracting shared code, check its real callers. Share only stable
-  behavior used by multiple callers, at the narrowest useful boundary.
+1. Use commands directly. Do not prefix commands with RTK or its proxy wrapper.
+2. Support completion claims with evidence. Keep focused checks, known failures,
+   browser/runtime proof, and deployed behavior distinct.
+3. For UI investigations, use real interactions. Include screenshots when I
+   ask for visual proof.
+4. For data or infrastructure issues, inspect the live service and configured
+   storage before changing state. Protect data and queued work; warn before
+   interrupting an active process, service, or app.
+5. Before extracting shared code, check its real callers. Share only stable
+   behavior used by multiple callers, at the narrowest useful boundary.
 
 ### Product, APIs, and naming
 
-- Lack of analytics does not prove a feature is unused. Distinguish overlapping
-  features from confirmed non-use. Add saved contacts, status tracking, or
-  views only when a real workflow needs them.
-- Keep shareable filters, sorting, and pagination in the URL.
-- For compatibility-sensitive changes, preserve current defaults and make new
-  behavior opt-in. Prefer composition over parallel APIs.
-- When changing a public API or type surface, cover the meaningful valid and
-  invalid combinations instead of relying on one representative example.
-- For naming, start with what the tool does. Favor practical, natural names
-  over clever or overly technical wordplay. Apply project-specific naming
-  rules only within that project.
-- When I ask whether a package name is available, check the exact registry.
-  A 404 means it was unpublished at check time, not that it is legally clear
-  or guaranteed to remain available.
+1. Lack of analytics does not prove a feature is unused. Distinguish overlapping
+   features from confirmed non-use. Add saved contacts, status tracking, or
+   views only when a real workflow needs them.
+2. Keep shareable filters, sorting, and pagination in the URL.
+3. For compatibility-sensitive changes, preserve current defaults and make new
+   behavior opt-in. Prefer composition over parallel APIs.
+4. When changing a public API or type surface, cover the meaningful valid and
+   invalid combinations instead of relying on one representative example.
+5. For naming, start with what the tool does. Favor practical, natural names
+   over clever or overly technical wordplay. Apply project-specific naming
+   rules only within that project.
+6. When I ask whether a package name is available, check the exact registry.
+   A 404 means it was unpublished at check time, not that it is legally clear
+   or guaranteed to remain available.
 
 ### Privacy
 
-- Keep credentials and local OAuth state out of versioned config, command
-  output, and memory. Refer to secrets by environment variable names.
-- Treat saved cookies and browser storage as login credentials. Keep them out
-  of repositories, configuration, and memory.
+1. Keep credentials and local OAuth state out of versioned config, command
+   output, and memory. Refer to secrets by environment variable names.
+2. Treat saved cookies and browser storage as login credentials. Keep them out
+   of repositories, configuration, and memory.
 
 ### Waiting and handoffs
 
-- Wait on a running job once instead of re-polling it; take one status snapshot
-  per decision; ask once and keep working.
-- End a turn only when a named thing will wake you: a child's result, a queued
-  message, or a scheduled reminder. If no wake exists, say so and schedule one.
+1. Wait on a running job once instead of re-polling it; take one status snapshot
+   per decision; ask once and keep working.
+2. End a turn only when a named thing will wake you: a child's result, a queued
+   message, or a scheduled reminder. If no wake exists, say so and schedule one.
 
 ### Editing files
 
-- Read a file in this session before overwriting it.
-- When a write or edit is refused because the file was not read, changed since it
-  was read, or the quoted excerpt was missing or ambiguous, re-read the affected
-  region and retry with a smaller exact excerpt.
-- Never escalate to a whole-file overwrite to get past a refusal; quote the
-  smallest excerpt that is unique.
+1. Read a file in this session before overwriting it.
+2. When a write or edit is refused because the file was not read, changed since it
+   was read, or the quoted excerpt was missing or ambiguous, re-read the affected
+   region and retry with a smaller exact excerpt.
+3. Never escalate to a whole-file overwrite to get past a refusal; quote the
+   smallest excerpt that is unique.
 
 ### Questions
 
@@ -103,13 +103,13 @@ This workstation has Nix and `comma` available, so a command missing from
 anything into a profile or stopping at "command not found", try a one-shot
 Nix-backed invocation:
 
-- `comma <command> [args...]` resolves and runs the executable from nixpkgs
-  without installing it.
-- `nix run nixpkgs#<package> -- <args...>` runs a known package explicitly.
-- `nix shell nixpkgs#<package> --command <command> [args...]` provides a
-  temporary environment for multi-tool debugging.
-- `nix develop` enters the repository's pinned development environment when
-  the flake provides one.
+1. `comma <command> [args...]` resolves and runs the executable from nixpkgs
+   without installing it.
+2. `nix run nixpkgs#<package> -- <args...>` runs a known package explicitly.
+3. `nix shell nixpkgs#<package> --command <command> [args...]` provides a
+   temporary environment for multi-tool debugging.
+4. `nix develop` enters the repository's pinned development environment when
+   the flake provides one.
 
 Prefer these ephemeral paths for diagnostics. Keep profile changes and
 configuration edits deliberate, and report the exact Nix/comma failure when a
@@ -274,8 +274,8 @@ Always on. **Every reply starts with `OUGABOUGA`** then terse caveman talk — *
 
 When the user ends a task with an open-ended prompt like "next steps?", "anything else [to do/add/improve/change]?", "something else?", "anything remaining?", "what's next?" — treat this as a genuine invitation to:
 
-- Suggest **additional improvements, refactors, tests, docs, or edge cases** that are worth doing
-- Batch **all** suggestions in one message, not one-at-a-time
+1. Suggest **additional improvements, refactors, tests, docs, or edge cases** that are worth doing
+2. Batch **all** suggestions in one message, not one-at-a-time
 
 ## Response sections and feedback
 
@@ -298,99 +298,101 @@ way and kept out of `SHOWCASE`; omit the section when there are no questions.
 ## Ordered lists by default
 
 Enumerations in replies, plans, docs and issues use ordered lists (`1.`, `2.`,
-`3.`, nested `a.`, `b.`), never bullets, whenever a reader may answer, cite or
-refer back to an item by position. Reserve `- ` for a set whose order carries
-no meaning and that nobody will address by number (a toolchain list, loose
-notes). Never mix both forms inside one enumeration, and never start an ordered
-item without its marker: a bare glyph line (`✓ …`) has no list marker, so
-Markdown merges it into the line above instead of making a point.
+`3.`; nested items restart at `1.` and the renderer numbers them), never
+bullets, whenever a reader may answer, cite or refer back to an item by
+position. Reserve `- ` for a set whose order carries no meaning and that nobody
+will address by number (a toolchain list, loose notes). This contract follows
+its own rule: every list in it is numbered. Never mix both forms inside one
+enumeration, and never start an ordered item without its marker: a bare glyph
+line (`✓ …`) has no list marker, so Markdown merges it into the line above
+instead of making a point.
 
 When the user asks "any [other] questions?" or "need anything from me?" — collect all pending unknowns and ask them in a **single batched message**. If a question can be answered by exploring the codebase, do that instead. If you have nothing, say "Nothing else — all good."
 
 ## Node project toolchain requirements
 
-- TypeScript 7.0+
-- pnpm 11+
-- Vite 8.1+
-- Oxlint + Oxfmt
+1. TypeScript 7.0+
+2. pnpm 11+
+3. Vite 8.1+
+4. Oxlint + Oxfmt
 
 ## Product and UI
 
-- Before adding code for an unlikely or hypothetical race or security problem, explain in simple words what could go wrong, how likely it is, and how much extra code it needs. Wait for the user's OK before adding it. Do not add guards for problems that cannot happen in practice.
-- Remove taglines, helper text, and secondary labels. If the screen needs them to make sense, fix the layout instead.
-- Use existing components, sizes, variants, interaction patterns, and design tokens first.
-- Say whether a UI change affects page layout or a component's internal styling.
+1. Before adding code for an unlikely or hypothetical race or security problem, explain in simple words what could go wrong, how likely it is, and how much extra code it needs. Wait for the user's OK before adding it. Do not add guards for problems that cannot happen in practice.
+2. Remove taglines, helper text, and secondary labels. If the screen needs them to make sense, fix the layout instead.
+3. Use existing components, sizes, variants, interaction patterns, and design tokens first.
+4. Say whether a UI change affects page layout or a component's internal styling.
 
 ## General code style
 
-- Use arrow functions over function declarations.
-- Default to NO comments. Add one only when the "why" is non-obvious.
-- Use kebab-case for files.
-- Use descriptive variable names; avoid shorthands.
-- Do not type cast (`as`) unless absolutely necessary.
-- Remove unused code and avoid repetition.
-- Use `Boolean` over `!!`.
-- Avoid multiple arguments; prefer a single object.
-- Avoid exporting things not intended for external use.
-- Validate using standard schema (Effect Schema or zod) rather than manual checks.
+1. Use arrow functions over function declarations.
+2. Default to NO comments. Add one only when the "why" is non-obvious.
+3. Use kebab-case for files.
+4. Use descriptive variable names; avoid shorthands.
+5. Do not type cast (`as`) unless absolutely necessary.
+6. Remove unused code and avoid repetition.
+7. Use `Boolean` over `!!`.
+8. Avoid multiple arguments; prefer a single object.
+9. Avoid exporting things not intended for external use.
+10. Validate using standard schema (Effect Schema or zod) rather than manual checks.
 
 ## Investigation and boundary defaults
 
-- Prefer domain-local code over generic utility dumping grounds. Add shared
-  code only when multiple real callers have stable shared semantics or an
-  invariant, and place it at the narrowest existing domain boundary.
-- For unfamiliar libraries, identify the installed version and verify the
-  exact API in versioned official documentation before implementing it.
-- Treat schemas, migrations, generated clients, snapshots, and other generated
-  artifacts as derived output: change the source of truth, regenerate, inspect
-  the diff, and validate the generated result. Never hand-edit generated
-  output to hide a source-of-truth problem.
-- Investigate databases read-only first. Inspect the target schema, indexes,
-  constraints, representative bounded data, and query plans before changing
-  database code or migrations.
-- Investigate browser and runtime behavior against the running application.
-  Correlate reproduction steps with console errors, network requests, DOM
-  state, and computed styles instead of relying on static code inspection.
-- Reproduce bugs before fixing them, state a falsifiable root-cause
-  hypothesis, and add a regression check for the repaired behavior.
-- Review changes for authorization, input validation, injection, secret
-  exposure, sensitive-data leakage, dangerous process execution, and
-  dependency risk. Do not print sensitive values while investigating.
-- Keep validation evidence compact: run the narrowest useful command, preserve
-  complete logs in an artifact when needed, and report failures separately
-  from known baseline failures.
-- Emit structured observability at the use-case or work-unit boundary with
-  typed fields, correlation identifiers, bounded payloads, and redaction.
-  Avoid duplicate audit events and adapter-level logging that obscures
-  ownership.
-- Decode external data once at the boundary; internal APIs use named,
-  validated types.
-- Avoid chained assertions, broad object or unknown contracts, and raw
-  response JSON assertions.
-- Do not spread database rows or caller-controlled transport data into output
-  objects; enumerate the fields that cross the boundary.
-- Keep generated schemas, clients, and migrations as the source of truth.
-- The deployed `antislop` and `effect-antislop` skills include executable
-  Oxlint and ast-grep implementations sourced from `emilint`; reuse those
-  sources instead of recreating a rule or duplicating it in both checkers.
+1. Prefer domain-local code over generic utility dumping grounds. Add shared
+   code only when multiple real callers have stable shared semantics or an
+   invariant, and place it at the narrowest existing domain boundary.
+2. For unfamiliar libraries, identify the installed version and verify the
+   exact API in versioned official documentation before implementing it.
+3. Treat schemas, migrations, generated clients, snapshots, and other generated
+   artifacts as derived output: change the source of truth, regenerate, inspect
+   the diff, and validate the generated result. Never hand-edit generated
+   output to hide a source-of-truth problem.
+4. Investigate databases read-only first. Inspect the target schema, indexes,
+   constraints, representative bounded data, and query plans before changing
+   database code or migrations.
+5. Investigate browser and runtime behavior against the running application.
+   Correlate reproduction steps with console errors, network requests, DOM
+   state, and computed styles instead of relying on static code inspection.
+6. Reproduce bugs before fixing them, state a falsifiable root-cause
+   hypothesis, and add a regression check for the repaired behavior.
+7. Review changes for authorization, input validation, injection, secret
+   exposure, sensitive-data leakage, dangerous process execution, and
+   dependency risk. Do not print sensitive values while investigating.
+8. Keep validation evidence compact: run the narrowest useful command, preserve
+   complete logs in an artifact when needed, and report failures separately
+   from known baseline failures.
+9. Emit structured observability at the use-case or work-unit boundary with
+   typed fields, correlation identifiers, bounded payloads, and redaction.
+   Avoid duplicate audit events and adapter-level logging that obscures
+   ownership.
+10. Decode external data once at the boundary; internal APIs use named,
+    validated types.
+11. Avoid chained assertions, broad object or unknown contracts, and raw
+    response JSON assertions.
+12. Do not spread database rows or caller-controlled transport data into output
+    objects; enumerate the fields that cross the boundary.
+13. Keep generated schemas, clients, and migrations as the source of truth.
+14. The deployed `antislop` and `effect-antislop` skills include executable
+    Oxlint and ast-grep implementations sourced from `emilint`; reuse those
+    sources instead of recreating a rule or duplicating it in both checkers.
 
 ## Effect
 
-- Read the Effect reference that matches the project's installed `effect`
-  version: `~/.references/effect-4.1.0` for 4.1. `~/.references/effect` is a
-  4.0 release candidate; its APIs differ from 4.1.
-- Use `Effect.fn` and `Effect.withSpan` for effectful functions.
-- Prefer Effect / @effect/platform APIs; fallback to `Effect.promise` when necessary.
-- Use qualified errors with `Schema.TaggedError`.
-- Avoid unnecessary destructuring; use dot notation.
-- Avoid `else`; prefer early returns.
+1. Read the Effect reference that matches the project's installed `effect`
+   version: `~/.references/effect-4.1.0` for 4.1. `~/.references/effect` is a
+   4.0 release candidate; its APIs differ from 4.1.
+2. Use `Effect.fn` and `Effect.withSpan` for effectful functions.
+3. Prefer Effect / @effect/platform APIs; fallback to `Effect.promise` when necessary.
+4. Use qualified errors with `Schema.TaggedError`.
+5. Avoid unnecessary destructuring; use dot notation.
+6. Avoid `else`; prefer early returns.
 
 ## Testing
 
-- Avoid mocks; test actual implementation.
-- Debug by running a single file, not the whole suite.
-- Use full path and `--run` for fast feedback.
-- Add `.only` to isolate a single failing test.
+1. Avoid mocks; test actual implementation.
+2. Debug by running a single file, not the whole suite.
+3. Use full path and `--run` for fast feedback.
+4. Add `.only` to isolate a single failing test.
 
 Run checks once before giving the final summary after a task (not after every changes):
 
@@ -403,10 +405,10 @@ pnpm fmt
 
 ## Unacceptable comments
 
-- Comments that repeat what code does.
-- Commented-out code.
-- Obvious comments.
-- Comments instead of good naming.
+1. Comments that repeat what code does.
+2. Commented-out code.
+3. Obvious comments.
+4. Comments instead of good naming.
 
 Code should be self-documenting. If a comment is needed to explain WHAT the code does, refactor instead.
 
